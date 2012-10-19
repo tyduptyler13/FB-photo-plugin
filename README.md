@@ -5,7 +5,7 @@ A web application for displaying photos from any Facebook page.
 
 Details
 --------------
-This application will use php or javascript (two versions) to retrieve photos from facebook and place them on a page. The application will allow you to sort by folders and people in the photos (only if the photos are tagged correctly) and allow you to view the full size image when clicked. Based on your settings you can blacklist folders and photos from showing up and apply your own styles.
+This application will use javascript to pull public pictures from a facebook page and display the results in selected regions of html including folder views and tag support.
 
 Todo
 --------------
