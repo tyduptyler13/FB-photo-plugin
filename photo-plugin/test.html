@@ -1,0 +1,49 @@
+<html>
+<head>
+	<title>PhotoSystem Test</title>
+	<style>
+		#photoArea, #albums, #photos{
+			border: solid black thin;
+			text-align:center;
+		}
+		.album{
+			background-color:green;
+			border: solid black thin;
+			margin-right: 10px;
+		}
+		.photo{
+			max-width:200px;
+			max-height:100px;
+			margin:10px;
+			
+		}
+	</style>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+	<script src="photoSystem.js"></script>
+	<script>
+		var photoSystem;
+		$(function(){
+			photoSystem = new PhotoSystem();
+		});
+	</script>
+</head>
+
+<body>
+	<div id="photoArea">
+		<div>
+			<input id="search" type="text">
+			<span id="searchStats"></span>
+		</div>
+		<div id="albums">
+			Albums go here.	
+		</div>
+		<div id="photos">
+			Photos go here.
+		</div>
+	</div>
+	<div id="lightBox">
+		
+	</div>
+</body>
+
+</html>
