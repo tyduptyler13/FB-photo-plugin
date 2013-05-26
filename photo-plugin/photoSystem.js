@@ -8,26 +8,29 @@
  *  for the maximum customization.
  *  </p>
  */
-PhotoSystem = function(){
+PhotoSystem = function(settings){
 	//Edit this to choose what the program will show.
 	this.settings = { //Class format = .class, ID format = #id
 			photos : "#photos", //Where to put the photos.
 			albums : "#albums", //where to put the folders
 			searchbar : "#search", //which input to check tags against. Leave empty to disable tag searches.
+			lightbox : "#lightBox",
+			lightboxPicture : "#activePhoto",
 			facebookid : "Coke", //Where to get the pictures.
 			accessToken : "" //Use this if you need permissions or run into rate limits.
 	};
 	this.albums = [];
 	this.photos = [];
-	
+
 	this.calls = 0;
 
-	this.getAlbums(this.getPhotos);
+	this.getAlbums();
+	this.checkLock(this.getPhotos);
 	this.checkLock(function(){
 		this.addPhotos();
 		this.setupEvents();
 	});
-	
+
 };
 
 PhotoSystem.prototype.constructor = PhotoSystem;
@@ -47,7 +50,7 @@ PhotoSystem.prototype.checkLock = function(callback){
  * 
  * @param callback
  */
-PhotoSystem.prototype.getAlbums = function(callback){
+PhotoSystem.prototype.getAlbums = function(){
 	var albums = $(this.settings.albums);
 	var scope = this;
 	this.get(this.settings.facebookid, "albums", function(data){
@@ -55,7 +58,7 @@ PhotoSystem.prototype.getAlbums = function(callback){
 		albums.text("");
 		$.each(scope.albums, function(index, element){
 
-			/**
+			/*
 			 * Change this to change the appearance of your album button.
 			 * 
 			 * If you would like to get a cover photo use the following:
@@ -66,22 +69,21 @@ PhotoSystem.prototype.getAlbums = function(callback){
 
 		});
 
-		callback.call(scope);
-
 	});
 
 };
 
-PhotoSystem.prototype.getPhotos = function(albumId){
+PhotoSystem.prototype.getPhotos = function(album){
 
 	var scope = this;
 
-	var getPhotos = function(albumId){
+	var getPhotos = function(album){
 
-		scope.get(albumId, "photos", function(data){
+		scope.get(album.id, "photos", function(data){
 
 			try{
 				scope.photos = scope.photos.concat(data.photos.data);
+				album.photos = data.photos.data;
 			} catch (e) {
 				console.warn("An album likely has no visible images.", e);
 			}
@@ -90,17 +92,17 @@ PhotoSystem.prototype.getPhotos = function(albumId){
 
 	};
 
-	if (albumId == undefined){//Get all
+	if (album == undefined){//Get all
 
 		$.each(this.albums, function(index, element){
 
-			getPhotos(element.id);
+			getPhotos(element);
 
 		});
 
 	} else {
 
-		getPhotos(albumId);
+		getPhotos(album);
 
 	}
 };
@@ -109,10 +111,10 @@ PhotoSystem.prototype.addPhotos = function(){
 
 	var photos = $(this.settings.photos);
 	photos.text("");
-	
+
 	$.each(this.photos, function(index, element){
 
-		/**
+		/*
 		 * Edit this to your liking for how images will be added.
 		 */
 		photos.append("<img class='photo' id='"+ element.id +"' src='"+element.picture+"'>");
@@ -130,7 +132,26 @@ PhotoSystem.prototype.filter = function(albumId){
 };
 
 PhotoSystem.prototype.setupEvents = function(){
-	
+
+	var scope = this;
+
+	$(this.settings.albums).children().click(function(event){
+
+		$(scope.settings.photos).children().hide(function(){
+			$.each(scope.albums, function(index, element){
+
+				if (element.id == event.target.id){
+
+					$.each(element.photos, function(index, element){
+						$("#"+element.id).finish().show();
+					});
+
+				}
+
+			});
+		});
+
+	});
 };
 
 PhotoSystem.prototype.findPhoto = function(id){
