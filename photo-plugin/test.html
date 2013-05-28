@@ -38,6 +38,8 @@ body {
 	top: 0;
 	left: 0;
 	background-color: rgba(0, 0, 0, .7);
+	background-position: center center;
+	background-repeat: no-repeat;
 }
 </style>
 <script
@@ -54,14 +56,12 @@ body {
 <body>
 	<div id="photoArea">
 		<div id="searches">
-			Search: <input id="search" type="text">
+			Search: <input disabled id="search" type="text" placeholder="Feature coming soon!">
 		</div>
 		<div id="albums">Loading albums...</div>
 		<div id="photos">Loading photos...</div>
 	</div>
-	<div id="lightBox">
-		<img id="activePhoto">
-	</div>
+	<div id="lightBox"></div>
 </body>
 
 </html>

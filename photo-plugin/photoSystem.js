@@ -19,6 +19,16 @@ PhotoSystem = function(settings){
 			facebookid : "Coke", //Where to get the pictures.
 			accessToken : "" //Use this if you need permissions or run into rate limits.
 	};
+
+	//Custom setup. Will go through all of the settings and set them if the exist.
+	if (settings){
+		for (setting in this.settings){
+			this.settings[setting] = (settings[setting] != undefined)?settings[setting]:this.settings[setting];
+		}
+	} else {
+		console.log("Using default demo settings.");
+	}
+
 	this.albums = [];
 	this.photos = [];
 
@@ -123,35 +133,45 @@ PhotoSystem.prototype.addPhotos = function(){
 
 };
 
-/**
- * Filters out the photos by album.
- * @param albumId
- */
-PhotoSystem.prototype.filter = function(albumId){
-
-};
-
 PhotoSystem.prototype.setupEvents = function(){
 
 	var scope = this;
 
-	$(this.settings.albums).children().click(function(event){
+	//Album Filtering.
+	$(this.settings.albums+" a").click(function(event){
 
-		$(scope.settings.photos).children().hide(function(){
-			$.each(scope.albums, function(index, element){
+		$(scope.settings.photos+" img:visible").hide(function(){
+			for(var x=0; x<scope.albums.length; ++x){
+
+				var element = scope.albums[x];
 
 				if (element.id == event.target.id){
 
-					$.each(element.photos, function(index, element){
-						$("#"+element.id).finish().show();
-					});
+					for(var i=0; i<element.photos.length; ++i){
+						var photo = element.photos[i];
+						$("#"+photo.id).finish().show();
+					}
 
 				}
 
-			});
+			}
 		});
 
 	});
+
+	//Image lightBox.
+	$(this.settings.lightbox).click(function(){
+		$(scope.settings.lightbox).fadeOut();
+	});
+	$(this.settings.photos+" img").click(function(event){
+
+		var id = event.target.id;
+		var source = scope.findPhoto(id).source;
+
+		$(scope.settings.lightbox).css("background-image","url("+source+")").fadeIn();
+
+	});
+
 };
 
 PhotoSystem.prototype.findPhoto = function(id){
