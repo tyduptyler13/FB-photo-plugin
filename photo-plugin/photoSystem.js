@@ -176,8 +176,8 @@ PhotoSystem.prototype.setupEvents = function(){
 
 PhotoSystem.prototype.findPhoto = function(id){
 	for(var i=0; i<this.photos.length; ++i){
-		if (photos[i].id == id){
-			return photos[i];
+		if (this.photos[i].id == id){
+			return this.photos[i];
 		}
 	}
 	return null;
